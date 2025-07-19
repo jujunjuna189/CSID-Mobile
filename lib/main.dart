@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        initialRoute: RouteName.MAIN,
+        initialRoute: RouteName.INITIAL,
         onGenerateRoute: RouteGenerate.onRoute,
         builder: EasyLoading.init(),
       ),
