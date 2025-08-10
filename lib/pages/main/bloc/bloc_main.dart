@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:csid_mobile/database/lesson/model/model_lesson.dart';
 import 'package:csid_mobile/database/preview/model/model_preview.dart';
 import 'package:csid_mobile/helpers/local_storage/local_storage.dart';
 import 'package:csid_mobile/helpers/request/request_api.dart';
@@ -65,11 +66,13 @@ class BlocMain extends Cubit<StateMain> {
         courses.addAll(raw.map((e) => ModelCourse.fromJson(e)).toList());
 
         ModelPreview? previews = await onGetPreviewByClass(courseId: courses.first.id);
+        List<ModelLesson>? lessons = await onGetLessonByClass(courseId: courses.first.id);
 
         emit(currentState.copyWith(
           myCourses: courses,
           myCourse: courses.first,
           myPreviews: previews,
+          myLessons: lessons,
         ));
       }
     });
@@ -84,6 +87,20 @@ class BlocMain extends Cubit<StateMain> {
         previews = ModelPreview.fromJson(raw);
 
         return previews;
+      } else {
+        return null;
+      }
+    });
+  }
+
+  Future<List<ModelLesson>?> onGetLessonByClass({int? courseId}) async {
+    return await RequestApi().get(path: "course-lessons?course_id=$courseId", isLoading: false).then((res) {
+      List<ModelLesson> lessons = [];
+      if ([200, 201].contains(res.statusCode)) {
+        List raw = jsonDecode(res.body)['data'] as List;
+        lessons.addAll(raw.map((e) => ModelLesson.fromJson(e)).toList());
+
+        return lessons;
       } else {
         return null;
       }

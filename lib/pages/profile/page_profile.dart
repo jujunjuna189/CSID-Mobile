@@ -14,6 +14,7 @@ class PageProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocMain blocMain = context.read<BlocMain>();
+    blocMain.onGetMyClass();
 
     return ListView(
       padding: const EdgeInsets.symmetric(
@@ -184,16 +185,16 @@ class PageProfile extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-          height: 200,
-          decoration: BoxDecoration(
-            color: ThemeApp.color.white.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
+        // const SizedBox(
+        //   height: 20,
+        // ),
+        // Container(
+        //   height: 200,
+        //   decoration: BoxDecoration(
+        //     color: ThemeApp.color.white.withOpacity(0.8),
+        //     borderRadius: BorderRadius.circular(20),
+        //   ),
+        // ),
         const SizedBox(
           height: 20,
         ),
@@ -202,7 +203,7 @@ class PageProfile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "CSID Classes",
+              "Your Classes",
               style: ThemeApp.font.bold.copyWith(fontSize: 14, color: ThemeApp.color.white),
             ),
             Text(
@@ -221,7 +222,7 @@ class PageProfile extends StatelessWidget {
             builder: (context, state) {
               final currentState = state as MainLoaded;
               return Row(
-                children: (currentState.courses ?? []).asMap().entries.map((item) {
+                children: (currentState.myCourses ?? []).asMap().entries.map((item) {
                   return Container(
                     margin: EdgeInsets.only(left: item.key == 0 ? 0 : 15),
                     width: 250,

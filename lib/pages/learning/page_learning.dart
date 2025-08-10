@@ -1,4 +1,5 @@
 import 'package:csid_mobile/pages/main/state/state_main.dart';
+import 'package:csid_mobile/widgets/molecules/frame/frame_video.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/utils/asset/asset.dart';
@@ -95,14 +96,19 @@ class PageLearning extends StatelessWidget {
               final currentState = state as MainLoaded;
               return ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  currentState.myCourse?.thumbnail ?? '',
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.image, size: 50, color: Colors.grey);
-                  },
-                ),
+                child: currentState.myPreviews?.metaValue?[0].youtubeUrl != null
+                    ? FrameVideo(
+                        source: currentState.myPreviews?.metaValue?[0].youtubeUrl ?? "",
+                        thumbnail: currentState.myCourse?.thumbnail ?? '',
+                      )
+                    : Image.network(
+                        currentState.myCourse?.thumbnail ?? '',
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.image, size: 50, color: Colors.grey);
+                        },
+                      ),
               );
             },
           ),
@@ -115,7 +121,7 @@ class PageLearning extends StatelessWidget {
           builder: (context, state) {
             final currentState = state as MainLoaded;
             return Column(
-              children: (currentState.myPreviews?.metaValue ?? []).asMap().entries.map((item) {
+              children: (currentState.myLessons ?? []).asMap().entries.map((item) {
                 return Container(
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -133,7 +139,7 @@ class PageLearning extends StatelessWidget {
                         style: ThemeApp.font.semiBold.copyWith(fontSize: 14, color: ThemeApp.color.white),
                       ),
                       Text(
-                        item.value.duration ?? '',
+                        item.value.source?.playtime ?? '',
                         style: ThemeApp.font.semiBold.copyWith(fontSize: 14, color: ThemeApp.color.white),
                       ),
                     ],
