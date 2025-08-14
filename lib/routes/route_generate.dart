@@ -7,6 +7,10 @@ import 'package:csid_mobile/pages/greetings/bloc/bloc_greetings.dart';
 import 'package:csid_mobile/pages/greetings/page_greetings.dart';
 import 'package:csid_mobile/pages/login/bloc/bloc_login.dart';
 import 'package:csid_mobile/pages/login/page_login.dart';
+import 'package:csid_mobile/pages/order/bloc/bloc_order.dart';
+import 'package:csid_mobile/pages/order/page_order.dart';
+import 'package:csid_mobile/pages/payment/bloc/bloc_payment.dart';
+import 'package:csid_mobile/pages/payment/page_payment.dart';
 import 'package:csid_mobile/pages/register/bloc/bloc_register.dart';
 import 'package:csid_mobile/pages/register/page_register.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +56,20 @@ class RouteGenerate {
             child: const PageClassDetail(),
           ),
         );
+      case RouteName.ORDER:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => BlocOrder(arguments: args is String ? args : '')..initialPage(),
+            child: const PageOrder(),
+          ),
+        );
+      case RouteName.PAYMENT:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => BlocPayment(arguments: args is String ? args : '')..initialPage(),
+            child: const PagePayment(),
+          ),
+        );
       default:
         return MaterialPageRoute(builder: (context) => _errorRoute());
     }
@@ -64,6 +82,7 @@ class RouteGenerate {
       BlocProvider(create: (context) => BlocMain()),
       BlocProvider(create: (context) => BlocLearning()),
       BlocProvider(create: (context) => BlocClassDetail()),
+      BlocProvider(create: (context) => BlocOrder()),
     ];
 
     return providers;

@@ -8,6 +8,7 @@ class ModelCourse {
     this.thumbnail,
     this.link,
     this.enrolledCount,
+    this.salePrice,
   });
 
   final int id;
@@ -18,6 +19,7 @@ class ModelCourse {
   final String? thumbnail;
   final String? link;
   final int? enrolledCount;
+  final int? salePrice;
 
   factory ModelCourse.fromJson(Map<String, dynamic> json) {
     return ModelCourse(
@@ -30,6 +32,7 @@ class ModelCourse {
       link: json['link'] ?? "",
       enrolledCount:
           json['enrolled_count'] is! int ? int.parse((json['enrolled_count'] ?? '0')) : json['enrolled_count'],
+      salePrice: int.parse((json['sale_price'] ?? 0).toString()),
     );
   }
 
@@ -42,5 +45,6 @@ class ModelCourse {
         "thumbnail": thumbnail,
         "link": link,
         "enrolled_count": enrolledCount,
+        "sale_price": salePrice,
       };
 }

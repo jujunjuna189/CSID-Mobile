@@ -4,6 +4,7 @@ import 'package:csid_mobile/pages/main/model/model.dart';
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:csid_mobile/widgets/molecules/navigator/navigator_bottom.dart';
 import 'package:flutter/material.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class PageMain extends StatefulWidget {
   const PageMain({super.key});
@@ -20,12 +21,22 @@ class _PageMainState extends State<PageMain> {
     super.initState();
     blocMain = context.read<BlocMain>();
     blocMain.pageController = PageController(initialPage: 0);
+    blocMain.videoController = YoutubePlayerController(
+      initialVideoId: "",
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+      ),
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
     blocMain.pageController.dispose();
+    if (blocMain.videoController?.value.isPlaying == true) blocMain.videoController?.pause();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (blocMain.videoController != null) blocMain.videoController?.dispose();
+    });
   }
 
   @override
@@ -61,9 +72,19 @@ class _PageMainState extends State<PageMain> {
                     }),
               ),
             ),
-            NavigatorBottom(
-              onJump: (value) => blocMain.pageController.jumpToPage(value),
-            ),
+            ValueListenableBuilder(
+              valueListenable: blocMain.videoController!,
+              builder: (context, value, _) {
+                return value.isFullScreen
+                    ? Container()
+                    : NavigatorBottom(
+                        onJump: (value) {
+                          if (blocMain.videoController?.value.isPlaying == true) blocMain.videoController?.pause();
+                          blocMain.pageController.jumpToPage(value);
+                        },
+                      );
+              },
+            )
           ],
         ),
       ),

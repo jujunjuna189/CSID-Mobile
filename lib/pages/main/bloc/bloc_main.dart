@@ -8,11 +8,15 @@ import 'package:csid_mobile/database/course/model/model_course.dart';
 import 'package:csid_mobile/pages/main/state/state_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class BlocMain extends Cubit<StateMain> {
   BlocMain() : super(MainInitial());
 
   late PageController pageController;
+  String? videoSources;
+  YoutubePlayerController? videoController;
 
   void initialPage() {
     emit(MainLoaded());
@@ -68,6 +72,8 @@ class BlocMain extends Cubit<StateMain> {
         ModelPreview? previews = await onGetPreviewByClass(courseId: courses.first.id);
         List<ModelLesson>? lessons = await onGetLessonByClass(courseId: courses.first.id);
 
+        loadVideo(previews?.metaValue?.first.youtubeUrl ?? "");
+
         emit(currentState.copyWith(
           myCourses: courses,
           myCourse: courses.first,
@@ -76,6 +82,34 @@ class BlocMain extends Cubit<StateMain> {
         ));
       }
     });
+  }
+
+  Future onGetDetailMyClass({required String courseId}) async {
+    final currentState = state as MainLoaded;
+    EasyLoading.show();
+    ModelCourse myCourse = (currentState.myCourses ?? []).firstWhere((item) => item.id.toString() == courseId);
+    ModelPreview? previews = await onGetPreviewByClass(courseId: myCourse.id);
+    List<ModelLesson>? lessons = await onGetLessonByClass(courseId: myCourse.id);
+
+    loadVideo(previews?.metaValue?.first.youtubeUrl ?? "");
+    EasyLoading.dismiss();
+    emit(currentState.copyWith(
+      myCourse: myCourse,
+      myPreviews: previews,
+      myLessons: lessons,
+    ));
+  }
+
+  // SetVideoPreview
+  void loadVideo(String source, {bool isLoading = false}) {
+    if (isLoading) EasyLoading.show();
+    videoSources = source;
+    String newId = YoutubePlayer.convertUrlToId(source)!;
+    videoController?.load(newId, startAt: 0);
+    Future.delayed(const Duration(milliseconds: 500), () {
+      EasyLoading.dismiss();
+    });
+    // videoController?.pause();
   }
 
   Future<ModelPreview?> onGetPreviewByClass({int? courseId}) async {

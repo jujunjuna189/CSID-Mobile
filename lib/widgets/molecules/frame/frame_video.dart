@@ -1,3 +1,4 @@
+import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -11,40 +12,28 @@ class FrameVideo extends StatefulWidget {
 }
 
 class _FrameVideoState extends State<FrameVideo> {
-  late YoutubePlayerController _controller;
+  late YoutubePlayerController _videoController;
 
   @override
   void initState() {
     super.initState();
-    String id = getId();
-    _controller = YoutubePlayerController(
-      initialVideoId: id,
+    _videoController = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(widget.source) ?? "",
       flags: const YoutubePlayerFlags(
         autoPlay: false,
       ),
     );
   }
 
-  String getId() {
-    String lasPath = widget.source.split("/").last;
-    return lasPath;
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return YoutubePlayer(
-      controller: _controller,
+      controller: _videoController,
       showVideoProgressIndicator: true,
-      progressIndicatorColor: Colors.amber,
-      progressColors: const ProgressBarColors(
-        playedColor: Colors.amber,
-        handleColor: Colors.amberAccent,
+      progressIndicatorColor: ThemeApp.color.light,
+      progressColors: ProgressBarColors(
+        playedColor: ThemeApp.color.primary,
+        handleColor: ThemeApp.color.primary,
       ),
       thumbnail: Image.network(
         widget.thumbnail,

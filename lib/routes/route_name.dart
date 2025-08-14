@@ -6,4 +6,6 @@ class RouteName {
   static const REGISTER = '/register';
   static const MAIN = '/main';
   static const CLASS_DETAIL = '/class-detail';
+  static const ORDER = '/order';
+  static const PAYMENT = '/payment';
 }

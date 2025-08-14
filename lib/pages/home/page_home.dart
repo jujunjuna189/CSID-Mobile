@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:csid_mobile/pages/home/widget/shimmer.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/pages/main/state/state_main.dart';
 import 'package:csid_mobile/routes/route_name.dart';
@@ -236,6 +237,9 @@ class PageHome extends StatelessWidget {
             bloc: blocMain,
             builder: (context, state) {
               final currentState = state as MainLoaded;
+              if ((currentState.courses ?? []).isEmpty) {
+                return const Shimmer();
+              }
               return Row(
                 children: (currentState.courses ?? []).asMap().entries.map((item) {
                   return Container(

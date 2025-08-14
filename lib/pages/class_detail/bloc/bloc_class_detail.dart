@@ -6,19 +6,35 @@ import 'package:csid_mobile/helpers/local_storage/local_storage.dart';
 import 'package:csid_mobile/helpers/request/request_api.dart';
 import 'package:csid_mobile/pages/class_detail/state/state_class_detail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class BlocClassDetail extends Cubit<StateClassDetail> {
   BlocClassDetail({this.arguments}) : super(ClassDetailInitial());
 
   final String? arguments;
+  String? videoSources;
+  YoutubePlayerController? videoController;
 
   void initialPage() {
+    videoController = YoutubePlayerController(
+      initialVideoId: "",
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+      ),
+    );
     emit(ClassDetailLoaded());
     final currentState = state as ClassDetailLoaded;
     LocalStorage.instance.getAuth().then((res) {
       emit(currentState.copyWith(auth: res, courseId: (jsonDecode(arguments ?? ''))['course_id']));
       onGetClass();
     });
+  }
+
+  // SetVideoPreview
+  void loadVideo(String source) {
+    videoSources = source;
+    String newId = YoutubePlayer.convertUrlToId(source)!;
+    videoController?.load(newId, startAt: 0);
   }
 
   Future<void> onGetClass() async {
@@ -32,6 +48,7 @@ class BlocClassDetail extends Cubit<StateClassDetail> {
         course = ModelCourse.fromJson(raw);
 
         ModelPreview? previews = await onGetPreviewByClass(courseId: currentState.courseId);
+        loadVideo(previews?.metaValue?.first.youtubeUrl ?? "");
 
         emit(currentState.copyWith(
           course: course,

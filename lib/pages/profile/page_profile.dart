@@ -185,16 +185,6 @@ class PageProfile extends StatelessWidget {
             ],
           ),
         ),
-        // const SizedBox(
-        //   height: 20,
-        // ),
-        // Container(
-        //   height: 200,
-        //   decoration: BoxDecoration(
-        //     color: ThemeApp.color.white.withOpacity(0.8),
-        //     borderRadius: BorderRadius.circular(20),
-        //   ),
-        // ),
         const SizedBox(
           height: 20,
         ),
@@ -301,7 +291,10 @@ class PageProfile extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Button(
-                                onPress: () => blocMain.pageController.jumpToPage(1),
+                                onPress: () {
+                                  blocMain.onGetDetailMyClass(courseId: item.value.id.toString());
+                                  blocMain.pageController.jumpToPage(1);
+                                },
                                 child: Text(
                                   "Start Learning",
                                   textAlign: TextAlign.center,

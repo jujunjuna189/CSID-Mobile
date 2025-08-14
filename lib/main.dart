@@ -1,4 +1,5 @@
 import 'package:csid_mobile/configs/config.dart';
+import 'package:csid_mobile/helpers/local_storage/local_storage.dart';
 import 'package:csid_mobile/routes/route_generate.dart';
 import 'package:csid_mobile/routes/route_name.dart';
 import 'package:csid_mobile/utils/theme/theme.dart';
@@ -9,12 +10,30 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Config.easyLoading();
+  prepare();
+}
 
-  runApp(const MyApp());
+Future prepare() async {
+  String initial = RouteName.INITIAL;
+
+  try {
+    await LocalStorage.instance.getAuth().then((res) {
+      if (!['', null].contains(res.displayName)) {
+        initial = RouteName.MAIN;
+        runApp(MyApp(initial: initial));
+      } else {
+        runApp(MyApp(initial: initial));
+      }
+    });
+  } catch (e) {
+    runApp(MyApp(initial: initial));
+  }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.initial});
+
+  final String initial;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +50,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        initialRoute: RouteName.MAIN,
+        initialRoute: initial,
         onGenerateRoute: RouteGenerate.onRoute,
         builder: EasyLoading.init(),
       ),

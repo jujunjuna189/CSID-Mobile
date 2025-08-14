@@ -1,3 +1,4 @@
+import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -11,7 +12,7 @@ class Config {
       ..textColor = Colors.white
       ..indicatorColor = Colors.transparent
       ..maskType = EasyLoadingMaskType.black
-      ..indicatorColor = Colors.amberAccent
+      ..indicatorColor = ThemeApp.color.light
       ..indicatorType = EasyLoadingIndicatorType.circle;
   }
 }
