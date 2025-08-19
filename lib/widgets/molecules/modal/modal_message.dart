@@ -1,5 +1,6 @@
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:csid_mobile/widgets/atoms/button/button.dart';
+import 'package:csid_mobile/widgets/atoms/button/button_outline.dart';
 import 'package:flutter/material.dart';
 
 class ModalMessage {
@@ -9,6 +10,8 @@ class ModalMessage {
     required String message,
     String confirmText = "OK",
     VoidCallback? onConfirm,
+    String? secondaryText, // nullable button text
+    VoidCallback? onSecondary, // nullable button action
   }) async {
     return showDialog(
       context: context,
@@ -37,18 +40,50 @@ class ModalMessage {
                   style: const TextStyle(fontSize: 14),
                 ),
                 const SizedBox(height: 25),
-                Button(
-                  onPress: () {
-                    Navigator.of(context).pop();
-                    if (onConfirm != null) onConfirm();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      confirmText,
-                      style: ThemeApp.font.semiBold.copyWith(color: ThemeApp.color.white),
+
+                // Row kalau ada 2 button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (secondaryText != null)
+                      Expanded(
+                        child: ButtonOutline(
+                          onPress: () {
+                            Navigator.of(context).pop();
+                            if (onSecondary != null) onSecondary();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              secondaryText,
+                              textAlign: TextAlign.center,
+                              style: ThemeApp.font.semiBold.copyWith(
+                                color: ThemeApp.color.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (secondaryText != null) const SizedBox(width: 12),
+                    Expanded(
+                      child: Button(
+                        onPress: () {
+                          Navigator.of(context).pop();
+                          if (onConfirm != null) onConfirm();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            confirmText,
+                            textAlign: TextAlign.center,
+                            style: ThemeApp.font.semiBold.copyWith(
+                              color: ThemeApp.color.white,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),

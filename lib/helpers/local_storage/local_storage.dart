@@ -16,4 +16,14 @@ class LocalStorage {
     final SharedPreferences refs = await SharedPreferences.getInstance();
     return ModelLogin.fromJson(jsonDecode(refs.getString("auth") ?? ""));
   }
+
+  Future<void> clearAuth() async {
+    final SharedPreferences refs = await SharedPreferences.getInstance();
+    await refs.remove("auth");
+  }
+
+  Future<void> clearAll() async {
+    final SharedPreferences refs = await SharedPreferences.getInstance();
+    await refs.clear();
+  }
 }

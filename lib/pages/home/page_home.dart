@@ -490,12 +490,12 @@ class PageHome extends StatelessWidget {
                             item.value.currentUserEnrolled == false
                                 ? Text(
                                     "Rp.${FormatterPrice.instance.formatToK((item.value.salePrice ?? 0))}",
-                                    style: ThemeApp.font.semiBold,
+                                    style: ThemeApp.font.semiBold.copyWith(fontSize: 20),
                                   )
                                 : Container(),
                             item.value.currentUserEnrolled == false
                                 ? const SizedBox(
-                                    width: 5,
+                                    width: 10,
                                   )
                                 : Container(),
                             Expanded(

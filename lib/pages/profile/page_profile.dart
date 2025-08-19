@@ -339,6 +339,36 @@ class PageProfile extends StatelessWidget {
           },
         ),
         const SizedBox(
+          height: 30,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Button(
+                onPress: () => blocMain.onLogout(context),
+                isBorder: false,
+                colors: const [Color.fromRGBO(216, 55, 55, 1), Color.fromRGBO(216, 55, 55, 1)],
+                child: Text(
+                  "Log out",
+                  textAlign: TextAlign.center,
+                  style: ThemeApp.font.semiBold.copyWith(color: ThemeApp.color.white),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                "Versi aplikasi 1.0.0",
+                textAlign: TextAlign.end,
+                style: ThemeApp.font.regular.copyWith(color: ThemeApp.color.white),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
           height: 100,
         ),
       ],

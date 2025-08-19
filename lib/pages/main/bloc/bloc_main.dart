@@ -4,6 +4,8 @@ import 'package:csid_mobile/helpers/local_storage/local_storage.dart';
 import 'package:csid_mobile/helpers/request/request_api.dart';
 import 'package:csid_mobile/database/course/model/model_course.dart';
 import 'package:csid_mobile/pages/main/state/state_main.dart';
+import 'package:csid_mobile/routes/route_name.dart';
+import 'package:csid_mobile/widgets/molecules/modal/modal_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -115,6 +117,24 @@ class BlocMain extends Cubit<StateMain> {
     emit(currentState.copyWith(
       myCourse: myCourse,
     ));
+  }
+
+  Future onLogout(BuildContext context) async {
+    ModalMessage.show(
+      context,
+      title: "Log out Confirmation",
+      message: 'Are you sure you want to log out from this account?',
+      secondaryText: "Back",
+      confirmText: "Log Out",
+      onConfirm: () async {
+        await LocalStorage.instance.clearAuth().then((res) {
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (!context.mounted) return;
+            Navigator.of(context).pushNamedAndRemoveUntil(RouteName.LOGIN, (route) => false);
+          });
+        });
+      },
+    );
   }
 
   @override
