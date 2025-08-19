@@ -1,0 +1,37 @@
+forgot pass
+register account
+resolusi
+banner => post_type => slider-banner => done
+list lesson di lanscape video
+
+
+
+back profile ke home => Done
+notif => hide => Done
+di halaman home tambahin your class => 1 => Done
+Di halaman home profile redirect ke profile page => Done
+login belum ke replace ketika masuk home => done
+hello koma,"spacy" nama => Done
+detail belum ke pouse ketika purchase now => Done
+Button Back berikan handle area => Done
+Ganti gambar jadi welcome to activity area di profile => Done
+active menu home dan profile => done
+password tambah hide show pw => Done
+tambah halaman all class => click start learning => sea all => Done
+start leaning munculin all class => Done
+data not found => data kosong => Done
+di halaman home ketika kelas belum dibeli text see detail => Done
+rounded gambar banner profile => Done
+ketika klik start learning (card) ke halaman preview learning dan list lesson => Done
+ketika current class, button background white => Done
+Lesson ada judul besar nya => Done
+undangan wa group redirek ke wa => redirect ke link => Done
+animation shimmer button start learning => Done
+
+preview video ada hijo hijo => discard
+
+
+module baru yang urgent
+coupon
+realtime data => payment, notif
+riwayat transaksi => 

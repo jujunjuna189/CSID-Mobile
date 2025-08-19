@@ -1,22 +1,18 @@
-import 'package:csid_mobile/widgets/atoms/field/field_password.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:csid_mobile/pages/login/bloc/bloc_login.dart';
-import 'package:csid_mobile/routes/route_name.dart';
+import 'package:csid_mobile/pages/forgot_password/bloc/bloc_forgot_password.dart';
 import 'package:csid_mobile/utils/asset/asset.dart';
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:csid_mobile/widgets/atoms/button/button.dart';
-import 'package:csid_mobile/widgets/atoms/button/button_outline.dart';
 import 'package:csid_mobile/widgets/atoms/field/field_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PageLogin extends StatelessWidget {
-  const PageLogin({super.key});
+class PageForgotPassword extends StatelessWidget {
+  const PageForgotPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
-    BlocLogin blocLogin = context.read<BlocLogin>();
+    BlocForgotPassword blocForgotPassword = context.read<BlocForgotPassword>();
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -52,15 +48,8 @@ class PageLogin extends StatelessWidget {
                       child: Column(
                         children: [
                           FieldText(
-                            controller: blocLogin.usernameController,
-                            placeHolder: "Email or Username",
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          FieldPassword(
-                            controller: blocLogin.passwordController,
-                            placeHolder: "Password",
+                            placeHolder: "Your Email",
+                            controller: blocForgotPassword.emailController,
                           ),
                           const SizedBox(
                             height: 10,
@@ -68,43 +57,13 @@ class PageLogin extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                flex: 1,
-                                child: ButtonOutline(
-                                  onPress: () => Navigator.of(context).pushNamed(RouteName.REGISTER),
-                                  child: Text(
-                                    "Signup",
-                                    textAlign: TextAlign.center,
-                                    style: ThemeApp.font.semiBold.copyWith(color: ThemeApp.color.white),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                flex: 2,
                                 child: Button(
-                                  onPress: () => blocLogin.onLogin(context),
+                                  onPress: () => blocForgotPassword.onForgot(context),
                                   child: Text(
-                                    "Login",
+                                    "Kirim ke email",
                                     textAlign: TextAlign.center,
                                     style: ThemeApp.font.semiBold.copyWith(color: ThemeApp.color.white),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).pushNamed(RouteName.FORGOT_PASSWORD),
-                                child: Text(
-                                  "Forgot Password ?",
-                                  style: ThemeApp.font.regular.copyWith(color: ThemeApp.color.white, fontSize: 10),
                                 ),
                               ),
                             ],
@@ -113,7 +72,7 @@ class PageLogin extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 41,
+                      height: 61,
                     ),
                     Text(
                       "Upgrading Creative Skills Platform",

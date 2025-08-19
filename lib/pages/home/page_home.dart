@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:csid_mobile/helpers/formatter/formatter_price.dart';
+import 'package:csid_mobile/pages/home/widget/not_found.dart';
 import 'package:csid_mobile/pages/home/widget/shimmer.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/pages/main/state/state_main.dart';
@@ -32,39 +34,42 @@ class PageHome extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(1.5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      gradient: LinearGradient(
-                        colors: [const Color.fromRGBO(87, 44, 220, 1), ThemeApp.color.light],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                    ),
+                  GestureDetector(
+                    onTap: () => blocMain.pageController.jumpToPage(2),
                     child: Container(
-                      padding: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(1.5),
                       decoration: BoxDecoration(
-                        color: ThemeApp.color.dark,
                         borderRadius: BorderRadius.circular(100),
+                        gradient: LinearGradient(
+                          colors: [const Color.fromRGBO(87, 44, 220, 1), ThemeApp.color.light],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
                       ),
-                      child: SizedBox(
-                        width: 49,
-                        height: 49,
-                        child: BlocBuilder<BlocMain, StateMain>(
-                          bloc: blocMain,
-                          builder: (context, state) {
-                            final currentState = state as MainLoaded;
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                currentState.auth?.avatar ?? '',
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(Icons.account_circle, size: 50, color: Colors.grey);
-                                },
-                              ),
-                            );
-                          },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: ThemeApp.color.dark,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: SizedBox(
+                          width: 49,
+                          height: 49,
+                          child: BlocBuilder<BlocMain, StateMain>(
+                            bloc: blocMain,
+                            builder: (context, state) {
+                              final currentState = state as MainLoaded;
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image.network(
+                                  currentState.auth?.avatar ?? '',
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.account_circle, size: 50, color: Colors.grey);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -72,86 +77,105 @@ class PageHome extends StatelessWidget {
                   const SizedBox(
                     width: 14,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      BlocBuilder<BlocMain, StateMain>(
-                        bloc: blocMain,
-                        builder: (context, state) {
-                          final currentState = state as MainLoaded;
-                          return RichText(
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            text: TextSpan(
-                              children: [
-                                const TextSpan(text: "Hello,"),
-                                TextSpan(text: currentState.auth?.displayName ?? "", style: ThemeApp.font.semiBold),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      Text(
-                        "Welcome Back !",
-                        style: ThemeApp.font.regular.copyWith(color: ThemeApp.color.white),
-                      )
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        BlocBuilder<BlocMain, StateMain>(
+                          bloc: blocMain,
+                          builder: (context, state) {
+                            final currentState = state as MainLoaded;
+                            return RichText(
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(text: "Hello, "),
+                                  TextSpan(text: currentState.auth?.displayName ?? "", style: ThemeApp.font.semiBold),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        Text(
+                          "Welcome Back !",
+                          style: ThemeApp.font.regular.copyWith(color: ThemeApp.color.white),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: ThemeApp.color.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: SvgPicture.asset(
-                Asset.icNotification,
-                width: 19,
-                height: 19,
-                color: ThemeApp.color.white,
-              ),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            //   decoration: BoxDecoration(
+            //     color: ThemeApp.color.white.withOpacity(0.2),
+            //     borderRadius: BorderRadius.circular(100),
+            //   ),
+            //   child: SvgPicture.asset(
+            //     Asset.icNotification,
+            //     width: 19,
+            //     height: 19,
+            //     color: ThemeApp.color.white,
+            //   ),
+            // ),
           ],
         ),
         const SizedBox(
           height: 20,
         ),
-        CarouselSlider(
-          options: CarouselOptions(
-            height: 194.0,
-            autoPlay: true,
-            viewportFraction: 1.0,
-          ),
-          items: [1, 2, 3, 4, 5].map(
-            (i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(
-                      color: ThemeApp.color.secondary,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        Asset.imgBanner1,
-                        width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
+        BlocBuilder<BlocMain, StateMain>(
+          bloc: blocMain,
+          builder: (context, state) {
+            final currentState = state as MainLoaded;
+            if (currentState.slider == null) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                height: 194.0,
+                decoration: BoxDecoration(
+                  color: ThemeApp.color.grey.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               );
-            },
-          ).toList(),
-        ),
-        const SizedBox(
-          height: 20,
+            }
+            if ((currentState.slider ?? []).isEmpty) {
+              return Container();
+            }
+            return Column(
+              children: [
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 194.0,
+                    autoPlay: true,
+                    viewportFraction: 1.0,
+                  ),
+                  items: (currentState.slider ?? []).asMap().entries.map((item) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        color: ThemeApp.color.secondary,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          item.value.source ?? "",
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            );
+          },
         ),
         Container(
           padding: const EdgeInsets.all(20),
@@ -219,29 +243,35 @@ class PageHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "CSID Classes",
+              "Your Classes",
               style: ThemeApp.font.bold.copyWith(fontSize: 14, color: ThemeApp.color.white),
             ),
-            Text(
-              "See all",
-              style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
+            GestureDetector(
+              onTap: () => blocMain.pageController.jumpToPage(1),
+              child: Text(
+                "See all",
+                style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
+              ),
             ),
           ],
         ),
         const SizedBox(
           height: 20,
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: BlocBuilder<BlocMain, StateMain>(
-            bloc: blocMain,
-            builder: (context, state) {
-              final currentState = state as MainLoaded;
-              if ((currentState.courses ?? []).isEmpty) {
-                return const Shimmer();
-              }
-              return Row(
-                children: (currentState.courses ?? []).asMap().entries.map((item) {
+        BlocBuilder<BlocMain, StateMain>(
+          bloc: blocMain,
+          builder: (context, state) {
+            final currentState = state as MainLoaded;
+            if (currentState.myCourses == null) {
+              return const Shimmer();
+            }
+            if ((currentState.myCourses ?? []).isEmpty) {
+              return const NotFoundF2();
+            }
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: (currentState.myCourses ?? []).asMap().entries.map((item) {
                   return Container(
                     margin: EdgeInsets.only(left: item.key == 0 ? 0 : 15),
                     width: 250,
@@ -321,11 +351,12 @@ class PageHome extends StatelessWidget {
                             Expanded(
                               child: Button(
                                 onPress: () => Navigator.of(context).pushNamed(
-                                  RouteName.CLASS_DETAIL,
+                                  RouteName.LEARNING_PREVIEW,
                                   arguments: jsonEncode(
                                     {'course_id': item.value.id},
                                   ),
                                 ),
+                                isBorder: false,
                                 child: Text(
                                   "Start Learning",
                                   textAlign: TextAlign.center,
@@ -339,9 +370,169 @@ class PageHome extends StatelessWidget {
                     ),
                   );
                 }).toList(),
-              );
-            },
-          ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "CSID Classes",
+              style: ThemeApp.font.bold.copyWith(fontSize: 14, color: ThemeApp.color.white),
+            ),
+            GestureDetector(
+              onTap: () => blocMain.pageController.jumpToPage(1),
+              child: Text(
+                "See all",
+                style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        BlocBuilder<BlocMain, StateMain>(
+          bloc: blocMain,
+          builder: (context, state) {
+            final currentState = state as MainLoaded;
+            if (currentState.courses == null) {
+              return const Shimmer();
+            }
+            if ((currentState.courses ?? []).isEmpty) {
+              return const NotFound();
+            }
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: (currentState.courses ?? []).asMap().entries.map((item) {
+                  return Container(
+                    margin: EdgeInsets.only(left: item.key == 0 ? 0 : 15),
+                    width: 250,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: ThemeApp.color.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 140,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              item.value.thumbnail ?? "",
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.image, size: 50, color: Colors.grey);
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          item.value.title ?? "",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: ThemeApp.font.bold.copyWith(
+                            fontSize: 24,
+                            height: 1.2,
+                            color: ThemeApp.color.dark,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  style: ThemeApp.font.regular.copyWith(
+                                    color: ThemeApp.color.dark.withOpacity(0.5),
+                                  ),
+                                  children: [
+                                    const TextSpan(text: 'by '),
+                                    TextSpan(text: item.value.authorName ?? "", style: ThemeApp.font.semiBold),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                SvgPicture.asset(Asset.icUser),
+                                const SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  (item.value.enrolledCount ?? 0).toString(),
+                                  style: ThemeApp.font.semiBold.copyWith(
+                                    fontSize: 12,
+                                    color: ThemeApp.color.dark.withOpacity(0.5),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            item.value.currentUserEnrolled == false
+                                ? Text(
+                                    "Rp.${FormatterPrice.instance.formatToK((item.value.salePrice ?? 0))}",
+                                    style: ThemeApp.font.semiBold,
+                                  )
+                                : Container(),
+                            item.value.currentUserEnrolled == false
+                                ? const SizedBox(
+                                    width: 5,
+                                  )
+                                : Container(),
+                            Expanded(
+                              child: Button(
+                                onPress: () => Navigator.of(context).pushNamed(
+                                  item.value.currentUserEnrolled == false
+                                      ? RouteName.CLASS_DETAIL
+                                      : RouteName.LEARNING_PREVIEW,
+                                  arguments: jsonEncode(
+                                    {'course_id': item.value.id},
+                                  ),
+                                ),
+                                isBorder: false,
+                                colors: item.value.currentUserEnrolled == false
+                                    ? const [
+                                        Color.fromRGBO(238, 73, 69, 1),
+                                        Color.fromRGBO(255, 219, 141, 1),
+                                      ]
+                                    : null,
+                                child: Text(
+                                  item.value.currentUserEnrolled == false ? "See Detail" : "Start Learning",
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: ThemeApp.font.medium.copyWith(color: ThemeApp.color.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          },
         ),
         const SizedBox(
           height: 100,

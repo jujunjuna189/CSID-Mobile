@@ -25,7 +25,7 @@ class CardProfile extends StatelessWidget {
                 color: ThemeApp.color.dark,
                 borderRadius: BorderRadius.circular(20),
                 image: const DecorationImage(
-                  image: AssetImage(Asset.imgBanner3),
+                  image: AssetImage(Asset.imgBanner1),
                 ),
               ),
             ),
@@ -98,19 +98,19 @@ class CardClipper extends CustomClipper<Path> {
 
     path.arcToPoint(
       Offset(centerX - 45, size.height - 15),
-      radius: Radius.circular(20),
+      radius: const Radius.circular(40),
       clockwise: false,
     );
 
     path.arcToPoint(
       Offset(centerX + 45, size.height - 15),
-      radius: Radius.circular(40),
+      radius: const Radius.circular(40),
       clockwise: true,
     );
 
     path.arcToPoint(
       Offset(centerX + 60, size.height),
-      radius: Radius.circular(20),
+      radius: const Radius.circular(40),
       clockwise: false,
     );
 

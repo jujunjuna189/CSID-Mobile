@@ -4,7 +4,6 @@ import 'package:csid_mobile/pages/main/model/model.dart';
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:csid_mobile/widgets/molecules/navigator/navigator_bottom.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class PageMain extends StatefulWidget {
   const PageMain({super.key});
@@ -15,28 +14,19 @@ class PageMain extends StatefulWidget {
 
 class _PageMainState extends State<PageMain> {
   late BlocMain blocMain;
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     blocMain = context.read<BlocMain>();
     blocMain.pageController = PageController(initialPage: 0);
-    blocMain.videoController = YoutubePlayerController(
-      initialVideoId: "",
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-      ),
-    );
   }
 
   @override
   void dispose() {
     super.dispose();
     blocMain.pageController.dispose();
-    if (blocMain.videoController?.value.isPlaying == true) blocMain.videoController?.pause();
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (blocMain.videoController != null) blocMain.videoController?.dispose();
-    });
   }
 
   @override
@@ -67,24 +57,22 @@ class _PageMainState extends State<PageMain> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: 3,
                     controller: blocMain.pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
                     itemBuilder: (_, i) {
                       return PageData.data[i].screen;
                     }),
               ),
             ),
-            ValueListenableBuilder(
-              valueListenable: blocMain.videoController!,
-              builder: (context, value, _) {
-                return value.isFullScreen
-                    ? Container()
-                    : NavigatorBottom(
-                        onJump: (value) {
-                          if (blocMain.videoController?.value.isPlaying == true) blocMain.videoController?.pause();
-                          blocMain.pageController.jumpToPage(value);
-                        },
-                      );
+            NavigatorBottom(
+              path: PageData.data[_currentIndex].path,
+              onJump: (value) {
+                blocMain.pageController.jumpToPage(value);
               },
-            )
+            ),
           ],
         ),
       ),

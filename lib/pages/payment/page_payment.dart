@@ -296,6 +296,11 @@ class PagePayment extends StatelessWidget {
                   Expanded(
                     child: Button(
                       onPress: () => Navigator.pushNamedAndRemoveUntil(context, RouteName.MAIN, (route) => false),
+                      colors: const [
+                        Color.fromRGBO(238, 73, 69, 1),
+                        Color.fromRGBO(255, 219, 141, 1),
+                      ],
+                      isBorder: false,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2),
                         child: Text(

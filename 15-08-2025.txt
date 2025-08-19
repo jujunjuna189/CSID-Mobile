@@ -1,0 +1,17 @@
+back profile ke home
+notif => hide
+resolusi
+ketika current class, button background white
+di halaman home tambahin your class => 1
+di halaman home tombol star learning jika belum di beli maka text purchase now
+tambah halaman all class => click start learning => sea all, 
+start leaning munculin all class
+ketika klik start learning (card) ke halaman preview learning dan list lesson
+preview video ada hijo hijo
+login belum ke replace ketika masuk home
+hello koma,"spacy" nama
+detail belum ke pouse ketika purchase now
+banner => post_type => slider-banner
+list lesson di lanscape video
+undangan wa group redirek ke wa => redirect ke link
+data not found => data kosong

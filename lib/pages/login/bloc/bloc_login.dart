@@ -24,7 +24,7 @@ class BlocLogin extends Cubit<Map<String, dynamic>> {
         await LocalStorage.instance
             .setAuth(auth: jsonEncode(ModelLogin.fromJson(jsonDecode(res.body)['user'])))
             .then((res) {
-          if (context.mounted) Navigator.of(context).pushNamed(RouteName.MAIN);
+          if (context.mounted) Navigator.of(context).pushNamedAndRemoveUntil(RouteName.MAIN, (route) => false);
         });
       }
     });

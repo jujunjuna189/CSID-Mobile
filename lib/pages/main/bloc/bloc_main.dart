@@ -1,7 +1,5 @@
 import 'dart:convert';
-
-import 'package:csid_mobile/database/lesson/model/model_lesson.dart';
-import 'package:csid_mobile/database/preview/model/model_preview.dart';
+import 'package:csid_mobile/database/slider/model/model_slider.dart';
 import 'package:csid_mobile/helpers/local_storage/local_storage.dart';
 import 'package:csid_mobile/helpers/request/request_api.dart';
 import 'package:csid_mobile/database/course/model/model_course.dart';
@@ -9,14 +7,11 @@ import 'package:csid_mobile/pages/main/state/state_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class BlocMain extends Cubit<StateMain> {
   BlocMain() : super(MainInitial());
 
   late PageController pageController;
-  String? videoSources;
-  YoutubePlayerController? videoController;
 
   void initialPage() {
     emit(MainLoaded());
@@ -25,9 +20,28 @@ class BlocMain extends Cubit<StateMain> {
       emit(currentState.copyWith(
         auth: res,
       ));
-      onGetSummary().then((res) {
-        onGetClass();
+      onGetSlider().then((res) {
+        onGetSummary().then((res) {
+          onGetMyClass().then((res) {
+            onGetClass();
+          });
+        });
       });
+    });
+  }
+
+  Future<void> onGetSlider() async {
+    final currentState = state as MainLoaded;
+    await RequestApi().get(path: "slider", isLoading: false).then((res) {
+      if ([200, 201].contains(res.statusCode)) {
+        List raw = jsonDecode(res.body)['data'] as List;
+        List<ModelSlider> slider = [];
+        slider.addAll(raw.map((e) => ModelSlider.fromJson(e)).toList());
+
+        emit(currentState.copyWith(
+          slider: slider,
+        ));
+      }
     });
   }
 
@@ -47,7 +61,7 @@ class BlocMain extends Cubit<StateMain> {
 
   void onGetClass() {
     final currentState = state as MainLoaded;
-    RequestApi().get(path: "course?limit=5", isLoading: false).then((res) {
+    RequestApi().get(path: "course?user_id=${currentState.auth?.id}&limit=5", isLoading: false).then((res) {
       if ([200, 201].contains(res.statusCode)) {
         List raw = jsonDecode(res.body)['data'] as List;
         List<ModelCourse> courses = [];
@@ -60,25 +74,33 @@ class BlocMain extends Cubit<StateMain> {
     });
   }
 
-  void onGetMyClass() {
+  void onGetAllClass() {
+    final currentState = state as MainLoaded;
+    RequestApi().get(path: "course?user_id=${currentState.auth?.id}&limit=10", isLoading: false).then((res) {
+      if ([200, 201].contains(res.statusCode)) {
+        List raw = jsonDecode(res.body)['data'] as List;
+        List<ModelCourse> allCourses = [];
+        allCourses.addAll(raw.map((e) => ModelCourse.fromJson(e)).toList());
+
+        emit(currentState.copyWith(
+          allCourses: allCourses,
+        ));
+      }
+    });
+  }
+
+  Future onGetMyClass() async {
     final currentState = state as MainLoaded;
     if (currentState.myCourses != null && currentState.myCourses!.isNotEmpty) return;
-    RequestApi().get(path: "my-courses?user_id=${currentState.auth?.id}", isLoading: false).then((res) async {
+    await RequestApi().get(path: "my-courses?user_id=${currentState.auth?.id}", isLoading: false).then((res) async {
       if ([200, 201].contains(res.statusCode)) {
         List raw = jsonDecode(res.body)['data'] as List;
         List<ModelCourse> courses = [];
         courses.addAll(raw.map((e) => ModelCourse.fromJson(e)).toList());
 
-        ModelPreview? previews = await onGetPreviewByClass(courseId: courses.first.id);
-        List<ModelLesson>? lessons = await onGetLessonByClass(courseId: courses.first.id);
-
-        loadVideo(previews?.metaValue?.first.youtubeUrl ?? "");
-
         emit(currentState.copyWith(
           myCourses: courses,
-          myCourse: courses.first,
-          myPreviews: previews,
-          myLessons: lessons,
+          myCourse: courses.isNotEmpty ? courses.first : null,
         ));
       }
     });
@@ -88,57 +110,11 @@ class BlocMain extends Cubit<StateMain> {
     final currentState = state as MainLoaded;
     EasyLoading.show();
     ModelCourse myCourse = (currentState.myCourses ?? []).firstWhere((item) => item.id.toString() == courseId);
-    ModelPreview? previews = await onGetPreviewByClass(courseId: myCourse.id);
-    List<ModelLesson>? lessons = await onGetLessonByClass(courseId: myCourse.id);
 
-    loadVideo(previews?.metaValue?.first.youtubeUrl ?? "");
     EasyLoading.dismiss();
     emit(currentState.copyWith(
       myCourse: myCourse,
-      myPreviews: previews,
-      myLessons: lessons,
     ));
-  }
-
-  // SetVideoPreview
-  void loadVideo(String source, {bool isLoading = false}) {
-    if (isLoading) EasyLoading.show();
-    videoSources = source;
-    String newId = YoutubePlayer.convertUrlToId(source)!;
-    videoController?.load(newId, startAt: 0);
-    Future.delayed(const Duration(milliseconds: 500), () {
-      EasyLoading.dismiss();
-    });
-    // videoController?.pause();
-  }
-
-  Future<ModelPreview?> onGetPreviewByClass({int? courseId}) async {
-    return await RequestApi().get(path: "course-previews?course_id=$courseId", isLoading: false).then((res) {
-      ModelPreview previews;
-      if ([200, 201].contains(res.statusCode)) {
-        final raw = jsonDecode(res.body)['data'];
-
-        previews = ModelPreview.fromJson(raw);
-
-        return previews;
-      } else {
-        return null;
-      }
-    });
-  }
-
-  Future<List<ModelLesson>?> onGetLessonByClass({int? courseId}) async {
-    return await RequestApi().get(path: "course-lessons?course_id=$courseId", isLoading: false).then((res) {
-      List<ModelLesson> lessons = [];
-      if ([200, 201].contains(res.statusCode)) {
-        List raw = jsonDecode(res.body)['data'] as List;
-        lessons.addAll(raw.map((e) => ModelLesson.fromJson(e)).toList());
-
-        return lessons;
-      } else {
-        return null;
-      }
-    });
   }
 
   @override

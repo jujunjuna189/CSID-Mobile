@@ -1,5 +1,6 @@
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Shimmer extends StatelessWidget {
   const Shimmer({super.key});
@@ -57,6 +58,69 @@ class ShimmerF2 extends StatelessWidget {
           margin: const EdgeInsets.only(left: 15),
           width: 250,
           height: 310,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ThemeApp.color.grey.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ShimmerF3 extends StatelessWidget {
+  const ShimmerF3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StaggeredGrid.count(
+      crossAxisCount: 2,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      children: [
+        Container(
+          height: 238,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ThemeApp.color.grey.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        Container(
+          height: 238,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ThemeApp.color.grey.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        Container(
+          height: 238,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ThemeApp.color.grey.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        Container(
+          height: 238,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ThemeApp.color.grey.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        Container(
+          height: 238,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ThemeApp.color.grey.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        Container(
+          height: 238,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: ThemeApp.color.grey.withOpacity(0.6),

@@ -1,6 +1,10 @@
 import 'package:csid_mobile/pages/class_detail/bloc/bloc_class_detail.dart';
 import 'package:csid_mobile/pages/class_detail/page_class_detail.dart';
+import 'package:csid_mobile/pages/forgot_password/bloc/bloc_forgot_password.dart';
+import 'package:csid_mobile/pages/forgot_password/page_forgot_password.dart';
 import 'package:csid_mobile/pages/learning/bloc/bloc_learning.dart';
+import 'package:csid_mobile/pages/learning_preview/bloc/bloc_learning_preview.dart';
+import 'package:csid_mobile/pages/learning_preview/page_learning_preview.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/pages/main/page_main.dart';
 import 'package:csid_mobile/pages/greetings/bloc/bloc_greetings.dart';
@@ -42,6 +46,13 @@ class RouteGenerate {
             child: const PageRegister(),
           ),
         );
+      case RouteName.FORGOT_PASSWORD:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => BlocForgotPassword(),
+            child: const PageForgotPassword(),
+          ),
+        );
       case RouteName.MAIN:
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
@@ -54,6 +65,13 @@ class RouteGenerate {
           builder: (context) => BlocProvider(
             create: (context) => BlocClassDetail(arguments: args is String ? args : '')..initialPage(),
             child: const PageClassDetail(),
+          ),
+        );
+      case RouteName.LEARNING_PREVIEW:
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => BlocLearningPreview(arguments: args is String ? args : '')..initialPage(),
+            child: const PageLearningPreview(),
           ),
         );
       case RouteName.ORDER:
@@ -79,10 +97,13 @@ class RouteGenerate {
     List<dynamic> providers = [
       BlocProvider(create: (context) => BlocGreetings()),
       BlocProvider(create: (context) => BlocLogin()),
+      BlocProvider(create: (context) => BlocRegister()),
+      BlocProvider(create: (context) => BlocForgotPassword()),
       BlocProvider(create: (context) => BlocMain()),
       BlocProvider(create: (context) => BlocLearning()),
       BlocProvider(create: (context) => BlocClassDetail()),
       BlocProvider(create: (context) => BlocOrder()),
+      BlocProvider(create: (context) => BlocPayment()),
     ];
 
     return providers;

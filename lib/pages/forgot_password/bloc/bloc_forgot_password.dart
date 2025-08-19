@@ -6,27 +6,23 @@ import 'package:csid_mobile/widgets/molecules/modal/modal_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BlocRegister extends Cubit<Map<String, dynamic>> {
-  BlocRegister() : super({});
+class BlocForgotPassword extends Cubit<Map<String, dynamic>> {
+  BlocForgotPassword() : super({});
 
-  TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
 
-  void onRegister(BuildContext context) {
+  void onForgot(BuildContext context) {
     Map<String, String> dataBatch = {
-      "username": usernameController.text,
       "email": emailController.text,
-      "password": passwordController.text,
     };
 
-    RequestApi().post(path: "register", body: dataBatch).then((res) async {
+    RequestApi().post(path: "forgot-password", body: dataBatch).then((res) async {
       if (!context.mounted) return;
       final raw = jsonDecode(res.body);
       if ([200, 201].contains(res.statusCode)) {
         ModalMessage.show(
           context,
-          title: "Account Signup",
+          title: "Forgot Password",
           message: raw['message'] ?? '-',
           confirmText: "Back To Login",
           onConfirm: () => Future.delayed(const Duration(milliseconds: 500), () {
@@ -36,7 +32,7 @@ class BlocRegister extends Cubit<Map<String, dynamic>> {
       } else {
         ModalMessage.show(
           context,
-          title: "Account Signup",
+          title: "Forgot Password",
           message: raw['message'] ?? '-',
           confirmText: "Back To Signup",
         );

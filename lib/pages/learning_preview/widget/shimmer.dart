@@ -6,6 +6,31 @@ class Shimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      sliver: SliverList.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            decoration: BoxDecoration(
+              color: ThemeApp.color.white.withOpacity(0.1),
+              border: Border.all(width: 1, color: ThemeApp.color.white.withOpacity(0.1)),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ShimmerF2 extends StatelessWidget {
+  const ShimmerF2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(

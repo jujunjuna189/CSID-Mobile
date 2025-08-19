@@ -29,13 +29,20 @@ class _PageClassDetailState extends State<PageClassDetail> {
     blocMain = context.read<BlocClassDetail>();
   }
 
+  void onPause(Function? navigation) {
+    if (blocMain.videoController?.value.isPlaying == true) blocMain.videoController?.pause();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (navigation != null) navigation();
+    });
+  }
+
   @override
   void dispose() {
-    super.dispose();
     if (blocMain.videoController?.value.isPlaying == true) blocMain.videoController?.pause();
     Future.delayed(const Duration(milliseconds: 300), () {
       if (blocMain.videoController != null) blocMain.videoController?.dispose();
     });
+    super.dispose();
   }
 
   @override
@@ -240,12 +247,19 @@ class _PageClassDetailState extends State<PageClassDetail> {
                             children: [
                               Expanded(
                                 child: Button(
-                                  onPress: () => Navigator.of(context).pushNamed(
-                                    RouteName.ORDER,
-                                    arguments: jsonEncode(
-                                      {'course_id': currentState.course?.id},
-                                    ),
-                                  ),
+                                  onPress: () => onPause(() {
+                                    Navigator.of(context).pushNamed(
+                                      RouteName.ORDER,
+                                      arguments: jsonEncode(
+                                        {'course_id': currentState.course?.id},
+                                      ),
+                                    );
+                                  }),
+                                  colors: const [
+                                    Color.fromRGBO(238, 73, 69, 1),
+                                    Color.fromRGBO(255, 219, 141, 1),
+                                  ],
+                                  isBorder: false,
                                   child: Text(
                                     "Purchase Now",
                                     textAlign: TextAlign.center,

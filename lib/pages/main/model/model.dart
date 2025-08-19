@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 
 class PageModel {
   int index;
+  String path;
   Widget screen;
 
-  PageModel({required this.index, required this.screen});
+  PageModel({required this.index, required this.path, required this.screen});
 }
 
 class PageData {
   static final data = [
-    PageModel(index: 0, screen: const PageHome()),
-    PageModel(index: 1, screen: const PageLearning()),
-    PageModel(index: 2, screen: const PageProfile()),
+    PageModel(index: 0, path: "home", screen: const PageHome()),
+    PageModel(index: 1, path: "learning", screen: const PageLearning()),
+    PageModel(index: 2, path: "profile", screen: const PageProfile()),
   ];
 }

@@ -2,6 +2,7 @@ import 'package:csid_mobile/routes/route_name.dart';
 import 'package:csid_mobile/utils/asset/asset.dart';
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:csid_mobile/widgets/atoms/button/button.dart';
+import 'package:csid_mobile/widgets/molecules/animation/animation_shimmer.dart';
 import 'package:flutter/material.dart';
 
 class ScreenNetwork extends StatelessWidget {
@@ -41,12 +42,14 @@ class ScreenNetwork extends StatelessWidget {
           ),
           SizedBox(
             width: 170,
-            child: Button(
-              onPress: () => Navigator.of(context).pushNamed(RouteName.LOGIN),
-              child: Text(
-                "Get Started",
-                textAlign: TextAlign.center,
-                style: ThemeApp.font.semiBold.copyWith(color: ThemeApp.color.white, fontSize: 12),
+            child: AnimationShimmer(
+              child: Button(
+                onPress: () => Navigator.of(context).pushNamed(RouteName.LOGIN),
+                child: Text(
+                  "Get Started",
+                  textAlign: TextAlign.center,
+                  style: ThemeApp.font.semiBold.copyWith(color: ThemeApp.color.white, fontSize: 12),
+                ),
               ),
             ),
           ),

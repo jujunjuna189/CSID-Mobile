@@ -2,10 +2,11 @@ import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
-  const Button({super.key, required this.child, this.color, this.onPress});
+  const Button({super.key, required this.child, this.colors, this.isBorder = true, this.onPress});
 
   final Widget child;
-  final Color? color;
+  final List<Color>? colors;
+  final bool isBorder;
   final Function()? onPress;
 
   @override
@@ -13,7 +14,7 @@ class Button extends StatelessWidget {
     return GestureDetector(
       onTap: onPress,
       child: Container(
-        padding: const EdgeInsets.all(2),
+        padding: EdgeInsets.all(isBorder ? 2 : 0),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [ThemeApp.color.white.withOpacity(0.4), ThemeApp.color.light],
@@ -34,11 +35,8 @@ class Button extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                const Color.fromRGBO(87, 44, 220, 1),
-                const Color.fromRGBO(183, 113, 244, 1),
-                ThemeApp.color.light
-              ],
+              colors: colors ??
+                  [const Color.fromRGBO(87, 44, 220, 1), const Color.fromRGBO(183, 113, 244, 1), ThemeApp.color.light],
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),

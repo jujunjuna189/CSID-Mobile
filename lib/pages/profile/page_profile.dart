@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:csid_mobile/pages/main/state/state_main.dart';
+import 'package:csid_mobile/pages/profile/widget/not_found.dart';
+import 'package:csid_mobile/pages/profile/widget/shimmer.dart';
+import 'package:csid_mobile/routes/route_name.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/pages/profile/widget/card/card_profile.dart';
@@ -14,7 +19,6 @@ class PageProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocMain blocMain = context.read<BlocMain>();
-    blocMain.onGetMyClass();
 
     return ListView(
       padding: const EdgeInsets.symmetric(
@@ -25,16 +29,26 @@ class PageProfile extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              decoration: BoxDecoration(
-                color: ThemeApp.color.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Icon(
-                Icons.chevron_left,
-                color: ThemeApp.color.white,
-                size: 20,
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => blocMain.pageController.jumpToPage(0),
+              child: Transform.translate(
+                offset: const Offset(-10, 0),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: ThemeApp.color.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Icon(
+                      Icons.chevron_left,
+                      color: ThemeApp.color.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(
@@ -196,22 +210,31 @@ class PageProfile extends StatelessWidget {
               "Your Classes",
               style: ThemeApp.font.bold.copyWith(fontSize: 14, color: ThemeApp.color.white),
             ),
-            Text(
-              "See all",
-              style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
+            GestureDetector(
+              onTap: () => blocMain.pageController.jumpToPage(1),
+              child: Text(
+                "See all",
+                style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
+              ),
             ),
           ],
         ),
         const SizedBox(
           height: 20,
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: BlocBuilder<BlocMain, StateMain>(
-            bloc: blocMain,
-            builder: (context, state) {
-              final currentState = state as MainLoaded;
-              return Row(
+        BlocBuilder<BlocMain, StateMain>(
+          bloc: blocMain,
+          builder: (context, state) {
+            final currentState = state as MainLoaded;
+            if (currentState.myCourses == null) {
+              return const Shimmer();
+            }
+            if ((currentState.myCourses ?? []).isEmpty) {
+              return const NotFoundF2();
+            }
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children: (currentState.myCourses ?? []).asMap().entries.map((item) {
                   return Container(
                     margin: EdgeInsets.only(left: item.key == 0 ? 0 : 15),
@@ -291,10 +314,13 @@ class PageProfile extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Button(
-                                onPress: () {
-                                  blocMain.onGetDetailMyClass(courseId: item.value.id.toString());
-                                  blocMain.pageController.jumpToPage(1);
-                                },
+                                onPress: () => Navigator.of(context).pushNamed(
+                                  RouteName.LEARNING_PREVIEW,
+                                  arguments: jsonEncode(
+                                    {'course_id': item.value.id},
+                                  ),
+                                ),
+                                isBorder: false,
                                 child: Text(
                                   "Start Learning",
                                   textAlign: TextAlign.center,
@@ -308,9 +334,9 @@ class PageProfile extends StatelessWidget {
                     ),
                   );
                 }).toList(),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
         const SizedBox(
           height: 100,
