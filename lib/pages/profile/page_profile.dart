@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:csid_mobile/pages/main/state/state_main.dart';
 import 'package:csid_mobile/pages/profile/widget/not_found.dart';
 import 'package:csid_mobile/pages/profile/widget/shimmer.dart';
-import 'package:csid_mobile/routes/route_name.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/pages/profile/widget/card/card_profile.dart';
@@ -31,7 +28,7 @@ class PageProfile extends StatelessWidget {
           children: [
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () => blocMain.pageController.jumpToPage(0),
+              onTap: () => blocMain.pageController?.jumpToPage(0),
               child: Transform.translate(
                 offset: const Offset(-10, 0),
                 child: Padding(
@@ -211,7 +208,7 @@ class PageProfile extends StatelessWidget {
               style: ThemeApp.font.bold.copyWith(fontSize: 14, color: ThemeApp.color.white),
             ),
             GestureDetector(
-              onTap: () => blocMain.pageController.jumpToPage(1),
+              onTap: () => blocMain.pageController?.jumpToPage(1),
               child: Text(
                 "See all",
                 style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
@@ -314,11 +311,9 @@ class PageProfile extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Button(
-                                onPress: () => Navigator.of(context).pushNamed(
-                                  RouteName.LEARNING_PREVIEW,
-                                  arguments: jsonEncode(
-                                    {'course_id': item.value.id},
-                                  ),
+                                onPress: () => blocMain.redirectToForLearning(
+                                  context,
+                                  courseId: item.value.id,
                                 ),
                                 isBorder: false,
                                 child: Text(

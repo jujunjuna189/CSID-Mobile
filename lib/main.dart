@@ -17,17 +17,15 @@ Future prepare() async {
   String initial = RouteName.INITIAL;
 
   try {
-    await LocalStorage.instance.getAuth().then((res) {
-      if (!['', null].contains(res.displayName)) {
-        initial = RouteName.MAIN;
-        runApp(MyApp(initial: initial));
-      } else {
-        runApp(MyApp(initial: initial));
-      }
-    });
+    final res = await LocalStorage.instance.getAuth();
+    if (!['', null].contains(res.displayName)) {
+      initial = RouteName.MAIN;
+    }
   } catch (e) {
-    runApp(MyApp(initial: initial));
+    initial = RouteName.INITIAL;
   }
+
+  runApp(MyApp(initial: initial));
 }
 
 class MyApp extends StatelessWidget {

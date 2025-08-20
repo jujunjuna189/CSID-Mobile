@@ -13,7 +13,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 class BlocMain extends Cubit<StateMain> {
   BlocMain() : super(MainInitial());
 
-  late PageController pageController;
+  PageController? pageController;
 
   void initialPage() {
     emit(MainLoaded());
@@ -78,13 +78,18 @@ class BlocMain extends Cubit<StateMain> {
 
   void onGetAllClass() {
     final currentState = state as MainLoaded;
-    RequestApi().get(path: "course?user_id=${currentState.auth?.id}&limit=10", isLoading: false).then((res) {
+    int limit = (currentState.limitAllCourse ?? 0) <= (currentState.course ?? 0)
+        ? (currentState.limitAllCourse ?? 0) + 10
+        : (currentState.limitAllCourse ?? 0);
+    if ((currentState.limitAllCourse ?? 0) > (currentState.course ?? 0)) return;
+    RequestApi().get(path: "course?user_id=${currentState.auth?.id}&limit=$limit", isLoading: false).then((res) {
       if ([200, 201].contains(res.statusCode)) {
         List raw = jsonDecode(res.body)['data'] as List;
         List<ModelCourse> allCourses = [];
         allCourses.addAll(raw.map((e) => ModelCourse.fromJson(e)).toList());
 
         emit(currentState.copyWith(
+          limitAllCourse: limit,
           allCourses: allCourses,
         ));
       }
@@ -125,7 +130,7 @@ class BlocMain extends Cubit<StateMain> {
       title: "Log out Confirmation",
       message: 'Are you sure you want to log out from this account?',
       secondaryText: "Back",
-      confirmText: "Log Out",
+      confirmText: "Logout",
       onConfirm: () async {
         await LocalStorage.instance.clearAuth().then((res) {
           Future.delayed(const Duration(milliseconds: 500), () {
@@ -135,6 +140,36 @@ class BlocMain extends Cubit<StateMain> {
         });
       },
     );
+  }
+
+  void redirectToForLearning(BuildContext context, {required int courseId}) async {
+    await Navigator.of(context)
+        .pushNamed(
+      RouteName.LEARNING_PREVIEW,
+      arguments: jsonEncode(
+        {'course_id': courseId},
+      ),
+    )
+        .then((res) {
+      if (res == 'toProfile') {
+        pageController?.jumpToPage(2);
+      }
+    });
+  }
+
+  void redirectToForClass(BuildContext context, {required int courseId, required bool enrolled}) async {
+    await Navigator.of(context)
+        .pushNamed(
+      enrolled == false ? RouteName.CLASS_DETAIL : RouteName.LEARNING_PREVIEW,
+      arguments: jsonEncode(
+        {'course_id': courseId},
+      ),
+    )
+        .then((res) {
+      if (res == 'toProfile') {
+        pageController?.jumpToPage(2);
+      }
+    });
   }
 
   @override

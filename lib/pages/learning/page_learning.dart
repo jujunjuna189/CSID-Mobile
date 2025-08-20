@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:csid_mobile/helpers/formatter/formatter_price.dart';
 import 'package:csid_mobile/pages/learning/widget/not_found.dart';
 import 'package:csid_mobile/pages/learning/widget/shimmer.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/pages/main/state/state_main.dart';
-import 'package:csid_mobile/routes/route_name.dart';
 import 'package:csid_mobile/utils/asset/asset.dart';
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:csid_mobile/widgets/atoms/button/button.dart';
@@ -14,14 +11,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PageLearning extends StatelessWidget {
+class PageLearning extends StatefulWidget {
   const PageLearning({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    BlocMain blocMain = context.read<BlocMain>();
+  State<PageLearning> createState() => _PageLearningState();
+}
+
+class _PageLearningState extends State<PageLearning> {
+  final ScrollController _scrollController = ScrollController();
+  late BlocMain blocMain;
+  bool isLoadingMore = false;
+
+  @override
+  void initState() {
+    super.initState();
+    blocMain = context.read<BlocMain>();
     blocMain.onGetAllClass();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent && !isLoadingMore) {
+        blocMain.onGetAllClass();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ListView(
+      controller: _scrollController,
       padding: const EdgeInsets.symmetric(
         vertical: 20,
         horizontal: 10,
@@ -32,7 +49,7 @@ class PageLearning extends StatelessWidget {
           children: [
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () => blocMain.pageController.jumpToPage(0),
+              onTap: () => blocMain.pageController?.jumpToPage(0),
               child: Transform.translate(
                 offset: const Offset(-10, 0),
                 child: Padding(
@@ -52,39 +69,42 @@ class PageLearning extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(1.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                gradient: LinearGradient(
-                  colors: [const Color.fromRGBO(87, 44, 220, 1), ThemeApp.color.light],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-              ),
+            GestureDetector(
+              onTap: () => blocMain.pageController?.jumpToPage(2),
               child: Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(1.5),
                 decoration: BoxDecoration(
-                  color: ThemeApp.color.dark,
                   borderRadius: BorderRadius.circular(100),
+                  gradient: LinearGradient(
+                    colors: [const Color.fromRGBO(87, 44, 220, 1), ThemeApp.color.light],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
                 ),
-                child: SizedBox(
-                  width: 49,
-                  height: 49,
-                  child: BlocBuilder<BlocMain, StateMain>(
-                    bloc: blocMain,
-                    builder: (context, state) {
-                      final currentState = state as MainLoaded;
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          currentState.auth?.avatar ?? '',
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.account_circle, size: 50, color: Colors.grey);
-                          },
-                        ),
-                      );
-                    },
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: ThemeApp.color.dark,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: SizedBox(
+                    width: 49,
+                    height: 49,
+                    child: BlocBuilder<BlocMain, StateMain>(
+                      bloc: blocMain,
+                      builder: (context, state) {
+                        final currentState = state as MainLoaded;
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.network(
+                            currentState.auth?.avatar ?? '',
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.account_circle, size: 50, color: Colors.grey);
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -216,13 +236,10 @@ class PageLearning extends StatelessWidget {
                                 : Container(),
                             Expanded(
                               child: Button(
-                                onPress: () => Navigator.of(context).pushNamed(
-                                  item.value.currentUserEnrolled == false
-                                      ? RouteName.CLASS_DETAIL
-                                      : RouteName.LEARNING_PREVIEW,
-                                  arguments: jsonEncode(
-                                    {'course_id': item.value.id},
-                                  ),
+                                onPress: () => blocMain.redirectToForClass(
+                                  context,
+                                  courseId: item.value.id,
+                                  enrolled: item.value.currentUserEnrolled,
                                 ),
                                 isBorder: false,
                                 colors: item.value.currentUserEnrolled == false

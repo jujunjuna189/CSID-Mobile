@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:csid_mobile/helpers/formatter/formatter_price.dart';
 import 'package:csid_mobile/pages/home/widget/not_found.dart';
 import 'package:csid_mobile/pages/home/widget/shimmer.dart';
 import 'package:csid_mobile/pages/main/bloc/bloc_main.dart';
 import 'package:csid_mobile/pages/main/state/state_main.dart';
-import 'package:csid_mobile/routes/route_name.dart';
 import 'package:csid_mobile/utils/asset/asset.dart';
 import 'package:csid_mobile/utils/theme/theme.dart';
 import 'package:csid_mobile/widgets/atoms/button/button.dart';
@@ -35,7 +32,7 @@ class PageHome extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => blocMain.pageController.jumpToPage(2),
+                    onTap: () => blocMain.pageController?.jumpToPage(2),
                     child: Container(
                       padding: const EdgeInsets.all(1.5),
                       decoration: BoxDecoration(
@@ -247,7 +244,7 @@ class PageHome extends StatelessWidget {
               style: ThemeApp.font.bold.copyWith(fontSize: 14, color: ThemeApp.color.white),
             ),
             GestureDetector(
-              onTap: () => blocMain.pageController.jumpToPage(1),
+              onTap: () => blocMain.pageController?.jumpToPage(1),
               child: Text(
                 "See all",
                 style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
@@ -350,11 +347,9 @@ class PageHome extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Button(
-                                onPress: () => Navigator.of(context).pushNamed(
-                                  RouteName.LEARNING_PREVIEW,
-                                  arguments: jsonEncode(
-                                    {'course_id': item.value.id},
-                                  ),
+                                onPress: () => blocMain.redirectToForLearning(
+                                  context,
+                                  courseId: item.value.id,
                                 ),
                                 isBorder: false,
                                 child: Text(
@@ -386,7 +381,7 @@ class PageHome extends StatelessWidget {
               style: ThemeApp.font.bold.copyWith(fontSize: 14, color: ThemeApp.color.white),
             ),
             GestureDetector(
-              onTap: () => blocMain.pageController.jumpToPage(1),
+              onTap: () => blocMain.pageController?.jumpToPage(1),
               child: Text(
                 "See all",
                 style: ThemeApp.font.regular.copyWith(fontSize: 12, color: ThemeApp.color.white),
@@ -500,13 +495,10 @@ class PageHome extends StatelessWidget {
                                 : Container(),
                             Expanded(
                               child: Button(
-                                onPress: () => Navigator.of(context).pushNamed(
-                                  item.value.currentUserEnrolled == false
-                                      ? RouteName.CLASS_DETAIL
-                                      : RouteName.LEARNING_PREVIEW,
-                                  arguments: jsonEncode(
-                                    {'course_id': item.value.id},
-                                  ),
+                                onPress: () => blocMain.redirectToForClass(
+                                  context,
+                                  courseId: item.value.id,
+                                  enrolled: item.value.currentUserEnrolled,
                                 ),
                                 isBorder: false,
                                 colors: item.value.currentUserEnrolled == false

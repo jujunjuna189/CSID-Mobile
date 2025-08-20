@@ -81,39 +81,44 @@ class _PageClassDetailState extends State<PageClassDetail> {
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(1.5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      gradient: LinearGradient(
-                        colors: [const Color.fromRGBO(87, 44, 220, 1), ThemeApp.color.light],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                    ),
+                  GestureDetector(
+                    onTap: () => onPause(() async {
+                      Navigator.of(context).pop("toProfile");
+                    }),
                     child: Container(
-                      padding: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(1.5),
                       decoration: BoxDecoration(
-                        color: ThemeApp.color.dark,
                         borderRadius: BorderRadius.circular(100),
+                        gradient: LinearGradient(
+                          colors: [const Color.fromRGBO(87, 44, 220, 1), ThemeApp.color.light],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
                       ),
-                      child: SizedBox(
-                        width: 49,
-                        height: 49,
-                        child: BlocBuilder<BlocClassDetail, StateClassDetail>(
-                          bloc: blocMain,
-                          builder: (context, state) {
-                            final currentState = state as ClassDetailLoaded;
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                currentState.auth?.avatar ?? '',
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(Icons.account_circle, size: 50, color: Colors.grey);
-                                },
-                              ),
-                            );
-                          },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: ThemeApp.color.dark,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: SizedBox(
+                          width: 49,
+                          height: 49,
+                          child: BlocBuilder<BlocClassDetail, StateClassDetail>(
+                            bloc: blocMain,
+                            builder: (context, state) {
+                              final currentState = state as ClassDetailLoaded;
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image.network(
+                                  currentState.auth?.avatar ?? '',
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.account_circle, size: 50, color: Colors.grey);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

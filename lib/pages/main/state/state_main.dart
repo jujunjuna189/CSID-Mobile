@@ -14,6 +14,7 @@ class MainLoaded extends StateMain {
   final int? member;
   final int? course;
   final List<ModelCourse>? courses;
+  final int? limitAllCourse;
   final List<ModelCourse>? allCourses;
   final List<ModelCourse>? myCourses;
   final ModelCourse? myCourse;
@@ -24,6 +25,7 @@ class MainLoaded extends StateMain {
     this.member,
     this.course,
     this.courses,
+    this.limitAllCourse,
     this.allCourses,
     this.myCourses,
     this.myCourse,
@@ -35,6 +37,7 @@ class MainLoaded extends StateMain {
     int? member,
     int? course,
     List<ModelCourse>? courses,
+    int? limitAllCourse,
     List<ModelCourse>? allCourses,
     List<ModelCourse>? myCourses,
     ModelCourse? myCourse,
@@ -45,6 +48,7 @@ class MainLoaded extends StateMain {
       member: member ?? this.member,
       course: course ?? this.course,
       courses: courses ?? this.courses,
+      limitAllCourse: limitAllCourse ?? this.limitAllCourse,
       allCourses: allCourses ?? this.allCourses,
       myCourses: myCourses ?? this.myCourses,
       myCourse: myCourse ?? this.myCourse,

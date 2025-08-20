@@ -18,6 +18,7 @@ class ModalMessage {
       barrierDismissible: true, // bisa ditutup dengan tap di luar
       builder: (BuildContext context) {
         return Dialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -53,7 +54,7 @@ class ModalMessage {
                             if (onSecondary != null) onSecondary();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.all(0),
                             child: Text(
                               secondaryText,
                               textAlign: TextAlign.center,
@@ -72,7 +73,7 @@ class ModalMessage {
                           if (onConfirm != null) onConfirm();
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.all(0),
                           child: Text(
                             confirmText,
                             textAlign: TextAlign.center,

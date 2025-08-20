@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:csid_mobile/database/course/model/model_course.dart';
 import 'package:csid_mobile/database/lesson/model/model_group_lesson.dart';
+import 'package:csid_mobile/database/lesson/model/model_lesson.dart';
 import 'package:csid_mobile/database/preview/model/model_preview.dart';
 import 'package:csid_mobile/helpers/local_storage/local_storage.dart';
 import 'package:csid_mobile/helpers/request/request_api.dart';
@@ -95,6 +96,22 @@ class BlocLearningPreview extends Cubit<StateLearningPreview> {
         return groupLessons;
       } else {
         return null;
+      }
+    });
+  }
+
+  Future onGetLessonByClass({int? courseId}) async {
+    final currentState = state as LearningPreviewLoaded;
+    if ((currentState.myLessons ?? []).isNotEmpty) return;
+    return await RequestApi().get(path: "course-lessons?course_id=$courseId").then((res) {
+      List<ModelLesson> lessons = [];
+      if ([200, 201].contains(res.statusCode)) {
+        List raw = jsonDecode(res.body)['data'] as List;
+        lessons.addAll(raw.map((e) => ModelLesson.fromJson(e)).toList());
+
+        emit(currentState.copyWith(
+          myLessons: lessons,
+        ));
       }
     });
   }
