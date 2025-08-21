@@ -35,3 +35,13 @@ module baru yang urgent
 coupon
 realtime data => payment, notif
 riwayat transaksi => 
+
+Login dummymember CSID
+username : dummymember \ Postermastery@gmail.com
+NibXc!V3*UjOlGm8(^)vWVwX
+
+
+- load more kelas => done
+- redirect to profile => detail class => detail kelas => done
+- terus udah home masih bisa "back" ke onboarding jadinya harus login lagi => done
+

@@ -185,6 +185,8 @@ class _PageLearningState extends State<PageLearning> {
                           children: [
                             Expanded(
                               child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 text: TextSpan(
                                   style: ThemeApp.font.regular.copyWith(
                                     fontSize: 10,

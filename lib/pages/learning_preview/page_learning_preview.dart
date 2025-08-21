@@ -396,6 +396,8 @@ class _PageLearningPreviewState extends State<PageLearningPreview> {
                                                   children: [
                                                     Expanded(
                                                       child: RichText(
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         text: TextSpan(
                                                           style: ThemeApp.font.regular.copyWith(
                                                             color: ThemeApp.color.dark.withOpacity(0.5),
