@@ -1,4 +1,4 @@
-package com.example.csid_mobile
+package com.csidacademy.csid_superapps
 
 import io.flutter.embedding.android.FlutterActivity
 
