@@ -358,7 +358,7 @@ class PageProfile extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
-                "Versi aplikasi 1.0.0",
+                "Versi aplikasi 1.0.3",
                 textAlign: TextAlign.end,
                 style: ThemeApp.font.regular.copyWith(color: ThemeApp.color.white),
               ),
