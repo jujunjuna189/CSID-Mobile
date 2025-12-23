@@ -1,5 +1,6 @@
 import 'package:csid_mobile/helpers/formatter/formatter_date.dart';
 import 'package:csid_mobile/helpers/formatter/formatter_price.dart';
+import 'package:csid_mobile/helpers/launcher/launcher.dart';
 import 'package:csid_mobile/pages/payment/bloc/bloc_payment.dart';
 import 'package:csid_mobile/pages/payment/state/state_payment.dart';
 import 'package:csid_mobile/routes/route_name.dart';
@@ -119,21 +120,47 @@ class PagePayment extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("No Virtual Account"),
-                                    BlocBuilder<BlocPayment, StatePayment>(
-                                      bloc: blocPayment,
-                                      builder: (context, state) {
-                                        final currentState = state as PaymentLoaded;
-                                        return Text(
-                                          currentState.invoice?.payCode ?? "",
-                                          style: ThemeApp.font.bold,
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                child: BlocBuilder<BlocPayment, StatePayment>(
+                                  bloc: blocPayment,
+                                  builder: (context, state) {
+                                    final currentState = state as PaymentLoaded;
+                                    if (currentState.methodGroup == 'E-Wallet') {
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Button(
+                                            onPress: () =>
+                                                Launcher.instance.open(Uri.parse(currentState.invoice?.payUrl ?? "")),
+                                            colors: const [
+                                              Color.fromRGBO(238, 73, 69, 1),
+                                              Color.fromRGBO(255, 219, 141, 1),
+                                            ],
+                                            isBorder: false,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 0),
+                                              child: Text(
+                                                "Lanjutkan Pembayaran",
+                                                textAlign: TextAlign.center,
+                                                style: ThemeApp.font.semiBold.copyWith(color: ThemeApp.color.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("No Virtual Account"),
+                                          Text(
+                                            currentState.invoice?.payCode ?? "",
+                                            style: ThemeApp.font.bold,
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  },
                                 ),
                               ),
                               BlocBuilder<BlocPayment, StatePayment>(

@@ -173,6 +173,7 @@ class PageOrder extends StatelessWidget {
                               'course_id': currentState.course?.id,
                               'method': item.value.code,
                               'method_icon': item.value.iconUrl,
+                              'method_group': item.value.group,
                             },
                           ),
                         ),

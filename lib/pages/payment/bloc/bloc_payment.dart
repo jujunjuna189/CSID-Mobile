@@ -20,6 +20,7 @@ class BlocPayment extends Cubit<StatePayment> {
         courseId: (jsonDecode(arguments ?? ''))['course_id'],
         method: (jsonDecode(arguments ?? ''))['method'],
         methodIcon: (jsonDecode(arguments ?? ''))['method_icon'],
+        methodGroup: (jsonDecode(arguments ?? ''))['method_group'],
       ));
       onGetClass().then((res) {
         onCreateInvoice();
@@ -51,6 +52,7 @@ class BlocPayment extends Cubit<StatePayment> {
       "amount": (currentState.course?.salePrice ?? 0).toString(),
     };
 
+    if (currentState.methodGroup == 'E-Wallet') dataBatch.addAll({"customer_phone": currentState.auth?.phone ?? ""});
     RequestApi().post(path: "create-invoice", body: dataBatch).then((res) async {
       if ([200, 201].contains(res.statusCode)) {
         final raw = jsonDecode(res.body)['invoice']['data'];

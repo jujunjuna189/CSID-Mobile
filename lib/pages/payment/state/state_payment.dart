@@ -13,16 +13,18 @@ class PaymentLoaded extends StatePayment {
   final int? courseId;
   final String? method;
   final String? methodIcon;
+  final String? methodGroup;
   final ModelCourse? course;
   final ModelInvoice? invoice;
 
-  PaymentLoaded({this.auth, this.courseId, this.method, this.methodIcon, this.course, this.invoice});
+  PaymentLoaded({this.auth, this.courseId, this.method, this.methodIcon, this.methodGroup, this.course, this.invoice});
 
   PaymentLoaded copyWith({
     ModelLogin? auth,
     int? courseId,
     String? method,
     String? methodIcon,
+    String? methodGroup,
     ModelCourse? course,
     ModelInvoice? invoice,
   }) {
@@ -31,6 +33,7 @@ class PaymentLoaded extends StatePayment {
       courseId: courseId ?? this.courseId,
       method: method ?? this.method,
       methodIcon: methodIcon ?? this.methodIcon,
+      methodGroup: methodGroup ?? this.methodGroup,
       course: course ?? this.course,
       invoice: invoice ?? this.invoice,
     );
